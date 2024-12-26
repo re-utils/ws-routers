@@ -1,40 +1,39 @@
-# Library template
+# Websocket routers
+Runtime-specific websocket routers built for performance.
 
-An NPM library template using Bun.
+## Bun
+Example route:
+```ts
+import { autoRoute } from 'ws-routers/bun';
 
-## Scripts
+export default autoRoute<{ id: number }>({
+  message: (ws, msg) => {
+    ws.send(ws.data.id + ':' + msg);
+  }
+});
+```
 
-All script sources.
+Use in a request handler:
+```ts
+import handleWS from '/path/to/route';
 
-### [Build](./scripts/build.ts)
+export default (req) => {
+  // Similar to server.upgrade but run the handlers for that route only
+  if (handleWS(req, {
+    name: Math.round(Math.random())
+  })) return;
 
-Emit `.js` and `.d.ts` files to [`lib`](./lib).
+  // Do other things...
+}
+```
 
-### [Publish](./scripts/publish.ts)
+And serve with `autoServe` instead of `Bun.serve`:
+```ts
+import { autoServe } from 'ws-routers/bun';
 
-Move [`package.json`](./package.json), [`README.md`](./README.md) to [`lib`](./lib) and publish the package.
-
-### [Bench](./scripts/bench.ts)
-
-Run files that ends with `.bench.ts` extension.
-
-## Package scripts
-
-All specified scripts in [`package.json`](./package.json).
-
-```bash
-# Build and run tests
-bun build:test
-
-# Build and run benchmarks
-bun build:bench
-
-# Build and publish the package
-bun build:publish
-
-# Lint
-bun lint
-
-# Lint and fix if possible
-bun lint:fix
+autoServe({
+  fetch: myRequestHandler,
+  port: 3000,
+  // Other options...
+});
 ```

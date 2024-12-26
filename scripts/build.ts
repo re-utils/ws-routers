@@ -14,15 +14,6 @@ const OUTDIR = `${ROOTDIR}/lib`;
 if (existsSync(OUTDIR)) rmSync(OUTDIR, { recursive: true });
 
 // Transpile files concurrently
-const transpiler = new Bun.Transpiler({
-  loader: 'tsx',
-  target: 'node',
-
-  // Lighter output
-  minifyWhitespace: true,
-  treeShaking: true
-});
-
 for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
   const srcPath = `${SOURCEDIR}/${path}`;
 
@@ -32,12 +23,12 @@ for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
   Bun.file(srcPath)
     .text()
     .then((buf) => {
-      transpiler.transform(buf)
-        .then((res) => {
-          if (res.length !== 0)
-            Bun.write(`${outPathNoExt}.js`, res.replace(/const /g, 'let '));
-        });
-
       Bun.write(`${outPathNoExt}.d.ts`, transpileDeclaration(buf, tsconfig as any).outputText);
     });
 }
+
+Bun.build({
+  entrypoints: Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR)).map((path) => `${SOURCEDIR}/${path}`),
+  target: 'node',
+  outdir: 'lib'
+});

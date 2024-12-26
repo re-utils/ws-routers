@@ -1,11 +1,10 @@
 {
-  "name": "ws-router",
-  "version": "0.0.1",
-  "description": "Example package",
+  "name": "ws-routers",
+  "version": "0.0.2",
+  "description": "Runtime-specific high performance websocket routers",
   "keywords": [],
   "license": "MIT",
   "type": "module",
-  "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
     "build:test": "bun scripts/build.ts && bun test",
