@@ -1,11 +1,32 @@
+/**
+ * WebSocket router API for Bun
+ * @module
+ */
+
 import type { WebSocketHandler, Server, ServerWebSocket, Serve } from 'bun';
 
 type HandlerNames = 'message' | 'open' | 'close' | 'drain' | 'ping' | 'pong';
 
-export type UpgradeFunc<T> = (req: Request, options?: T) => boolean;
+/**
+ * The returned upgrade function
+ */
+export type UpgradeFunc<T> = undefined extends T
+  ? (req: Request, options?: T) => boolean
+  : (req: Request, options: T) => boolean;
+
+/**
+ * A list of WebSocket handlers
+ */
 export type Handler<T> = Pick<WebSocketHandler<T>, HandlerNames>;
 
+/**
+ * WebSocket options without handlers
+ */
 export type WebSocketOptions = Omit<WebSocketHandler<unknown>, HandlerNames>;
+
+/**
+ * Serve options with WebSocket options
+ */
 export type WebSocketServeOptions = Omit<
   // Extract all type that can specify websocket and replace
   // Their websocket type with an option type
@@ -17,7 +38,9 @@ export type WebSocketServeOptions = Omit<
 const noop = (): void => { };
 
 /**
- * Create a websocket handler
+ * Create a WebSocket route
+ * @param handler - A list of WebSocket handlers for that route
+ * @returns The upgrade function associated with the route
  */
 export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
   const handlers: any[] = [
@@ -31,13 +54,15 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
 
   let server: Server | undefined;
 
-  return (req, data) => server == null
+  return (req: Request, data: any) => server == null
     ? (server = req as unknown as Server) as unknown as boolean
     : server.upgrade(req, { data: [handlers, data] });
 };
 
 /**
  * Load all routes into an existing server
+ * @param routes - Defined routes to bind
+ * @param server - The target Bun server
  */
 export const loadRoutes = (routes: UpgradeFunc<unknown>[], server: Server): void => {
   routes.forEach((f) => f(server as unknown as Request));
@@ -58,6 +83,9 @@ type HandlerList = [
 /** @internal */
 type ServerSocket = ServerWebSocket<Data> & HandlerList;
 
+/**
+ * The common WebSocket handler for routes
+ */
 export const socketHandler: WebSocketHandler<any> = {
   open: (s: ServerSocket) => {
     const data = s.data;
@@ -85,6 +113,9 @@ export const socketHandler: WebSocketHandler<any> = {
 
 /**
  * Start a Bun server with all the provided routes
+ * @param options - Serve options with WebSocket options
+ * @param routes - Defined routes to bind
+ * @returns The created server
  */
 export const serve = (options: WebSocketServeOptions, routes: UpgradeFunc<unknown>[]): Server => {
   const server = Bun.serve({
@@ -98,10 +129,12 @@ export const serve = (options: WebSocketServeOptions, routes: UpgradeFunc<unknow
 };
 
 // Auto-routing
-export const autoRoutes: UpgradeFunc<any>[] = [];
+const autoRoutes: UpgradeFunc<any>[] = [];
 
 /**
  * Create a websocket handler and automatically register it to a list
+ * @param handler - The handler to register
+ * @returns The upgrade function associated with the route
  */
 export const autoRoute = <T>(handler: Handler<T>): UpgradeFunc<T> => {
   const f = route(handler);
@@ -111,5 +144,7 @@ export const autoRoute = <T>(handler: Handler<T>): UpgradeFunc<T> => {
 
 /**
  * Serve but with routes registered by `autoRoute`
+ * @param options - Serve options with WebSocket options
+ * @returns The created server
  */
 export const autoServe = (options: WebSocketServeOptions): Server => serve(options, autoRoutes);

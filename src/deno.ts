@@ -1,7 +1,21 @@
+/**
+ * WebSocket router API for Deno
+ * @module
+ */
+
+/**
+ * A server socket
+ */
 export interface ServerWebSocket<T> extends WebSocket {
+  /**
+   * Data sent by upgrading
+   */
   $: T;
 }
 
+/**
+ * A list of WebSocket handlers
+ */
 export interface Handler<T> {
   open?: ServerWebSocket<T>['onopen'] & {};
   message?: ServerWebSocket<T>['onmessage'] & {};
@@ -9,10 +23,18 @@ export interface Handler<T> {
   close?: ServerWebSocket<T>['onclose'] & {};
 }
 
+/**
+ * The returned upgrade function
+ */
 type UpgradeFunc<T> = undefined extends T
   ? (req: Request, opts?: Deno.UpgradeWebSocketOptions & { $?: T }) => Response
   : (req: Request, opts: Deno.UpgradeWebSocketOptions & { $: T }) => Response;
 
+/**
+ * Create a WebSocket route
+ * @param handler - A list of WebSocket handlers for that route
+ * @returns The upgrade function associated with the route
+ */
 export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
   const data = [handler.open ?? null, handler.message ?? null, handler.error ?? null, handler.close ?? null] as const;
 
