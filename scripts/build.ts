@@ -10,11 +10,15 @@ const ROOTDIR = resolve(import.meta.dir, '..');
 const SOURCEDIR = `${ROOTDIR}/src`;
 const OUTDIR = `${ROOTDIR}/lib`;
 
+const exclude = ['deno.ts'];
+
 // Remove old content
 if (existsSync(OUTDIR)) rmSync(OUTDIR, { recursive: true });
 
 // Transpile files concurrently
 for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
+  if (exclude.includes(path)) continue;
+
   const srcPath = `${SOURCEDIR}/${path}`;
 
   const pathExtStart = path.lastIndexOf('.');
@@ -30,7 +34,7 @@ for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
 Bun.build({
   entrypoints: Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR))
     // Deno is published separately
-    .filter((name) => name !== 'deno.ts')
+    .filter((name) => !exclude.includes(name))
     .map((path) => `${SOURCEDIR}/${path}`),
   target: 'node',
   outdir: 'lib'
