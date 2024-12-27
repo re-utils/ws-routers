@@ -28,7 +28,10 @@ for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
 }
 
 Bun.build({
-  entrypoints: Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR)).map((path) => `${SOURCEDIR}/${path}`),
+  entrypoints: Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR))
+    // Deno is published separately
+    .filter((name) => name !== 'deno.ts')
+    .map((path) => `${SOURCEDIR}/${path}`),
   target: 'node',
   outdir: 'lib'
 });

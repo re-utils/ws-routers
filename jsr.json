@@ -1,0 +1,12 @@
+{
+  "name": "@re-utils/ws-routers",
+  "version": "0.1.0",
+  "license": "MIT",
+  "exports": {
+    "./bun": "./src/bun.ts",
+    "./deno": "./src/deno.ts"
+  },
+  "publish": {
+    "include": ["README.md", "package.json", "src"]
+  }
+}

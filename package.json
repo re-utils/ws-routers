@@ -16,11 +16,13 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "latest",
     "@types/bun": "latest",
+    "@types/deno": "^2.0.0",
     "eslint": "latest",
     "eslint-plugin-jsdoc": "latest",
+    "jsr": "^0.13.2",
     "mitata": "latest",
-    "typescript": "latest",
     "tsx": "latest",
+    "typescript": "latest",
     "typescript-eslint": "latest"
   },
   "dependencies": {}
