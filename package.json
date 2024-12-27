@@ -1,7 +1,7 @@
 {
   "name": "ws-routers",
-  "version": "0.0.3",
-  "description": "Runtime-specific high performance websocket routers",
+  "version": "0.0.4",
+  "description": "Runtime-specific high performance WebSocket routers",
   "keywords": [],
   "license": "MIT",
   "type": "module",
