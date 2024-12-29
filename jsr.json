@@ -8,6 +8,10 @@
     "./deno": "./src/deno.ts"
   },
   "publish": {
-    "include": ["README.md", "package.json", "src"]
+    "include": [
+      "README.md",
+      "package.json",
+      "src"
+    ]
   }
 }
