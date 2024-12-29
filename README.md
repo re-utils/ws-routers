@@ -72,3 +72,21 @@ export default (req: Request): Response => {
   // Do other things...
 }
 ```
+
+## Topics
+A very simple event model.
+```ts
+import topic from 'ws-routers/topic';
+
+// Create a topic
+const [subscribers, publish] = topic((subscriber, ...args) => {
+  // Do something with subscriber and args...
+});
+
+// Set operations
+subscribers.add(subscriber);
+subscribers.remove(subscriber);
+
+// Publish some data to all subscribers (must match callback args)
+publish(...args);
+```

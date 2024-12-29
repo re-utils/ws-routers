@@ -5,6 +5,7 @@ import { resolve } from 'node:path/posix';
 import { transpileDeclaration } from 'typescript';
 import tsconfig from '../tsconfig.json';
 import pkg from '../package.json';
+import jsrPkg from '../jsr.json';
 
 // Constants
 const ROOTDIR = resolve(import.meta.dir, '..');
@@ -30,22 +31,29 @@ for (const path of new Bun.Glob('**/*.ts').scanSync(SOURCEDIR)) {
     });
 }
 
-const entries = Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR))
-  .filter((name) => !exclude.includes(name));
+const allEntries = Array.from(new Bun.Glob('*.ts').scanSync(SOURCEDIR));
+const npmEntries = allEntries.filter((name) => !exclude.includes(name));
 
 Bun.build({
   // Deno is published separately
-  entrypoints: entries.map((path) => `${SOURCEDIR}/${path}`),
+  entrypoints: npmEntries.map((path) => `${SOURCEDIR}/${path}`),
   target: 'node',
   outdir: 'lib'
 });
 
 // @ts-expect-error package.json may not have this yet
-Object.assign(pkg.exports ??= {}, Object.fromEntries(entries
-  // Get the name only
+Object.assign(pkg.exports ??= {}, Object.fromEntries(npmEntries
+  // Get names only
   .map((name) => name.substring(0, name.lastIndexOf('.') >>> 0))
   // Package info will be moved to lib
   .map((name) => [name, `./${name}.js`])));
 
+// @ts-expect-error package.json may not have this yet
+// eslint-disable-next-line
+Object.assign(jsrPkg.exports ??= {}, Object.fromEntries(allEntries
+  // Package info will be moved to lib
+  .map((name) => [`./${name.substring(0, name.lastIndexOf('.') >>> 0)}`, `./src/${name}`])));
+
 // Add new exports field
 Bun.write(`${ROOTDIR}/package.json`, JSON.stringify(pkg, null, 2));
+Bun.write(`${ROOTDIR}/jsr.json`, JSON.stringify(jsrPkg, null, 2));
