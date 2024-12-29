@@ -4,6 +4,7 @@
  */
 
 import type { WebSocketHandler, Server, ServerWebSocket, Serve } from 'bun';
+export type { ServerWebSocket };
 
 type HandlerNames = 'message' | 'open' | 'close' | 'drain' | 'ping' | 'pong';
 

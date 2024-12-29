@@ -11,19 +11,27 @@
     "build:bench": "bun build:test && bun scripts/bench.ts",
     "build:publish": "bun build:test && bun scripts/publish.ts",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "try-minify": "bun scripts/reportMinifySize.ts"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "latest",
     "@types/bun": "latest",
     "@types/deno": "^2.0.0",
+    "@types/uglify-js": "^3.17.5",
     "eslint": "latest",
     "eslint-plugin-jsdoc": "latest",
     "jsr": "^0.13.2",
     "mitata": "latest",
     "tsx": "latest",
     "typescript": "latest",
-    "typescript-eslint": "latest"
+    "typescript-eslint": "latest",
+    "uglify-js": "^3.19.3"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "exports": {
+    "bun": "./bun.js",
+    "pubsub": "./pubsub.js",
+    "topic": "./topic.js"
+  }
 }

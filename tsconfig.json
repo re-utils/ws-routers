@@ -23,6 +23,10 @@
     "noPropertyAccessFromIndexSignature": false,
     // Declaration options
     "declaration": true,
-    "isolatedDeclarations": true
+    "isolatedDeclarations": true,
+    // Path
+    "paths": {
+      "ws-routers/*": ["./lib/*"]
+    }
   }
 }
