@@ -31,7 +31,6 @@
   },
   "dependencies": {},
   "exports": {
-    "events": "./events.js",
     "bun": "./bun.js",
     "event": "./event.js",
     "cloudflare": "./cloudflare.js"
