@@ -59,21 +59,56 @@ import handleSocket from '/path/to/route';
 export default (req: Request): Response => {
   if (req.headers.get("upgrade") === "websocket") {
     // The websocket is handled by the route
-    const response = handleSocket(req, {
+    const res = handleSocket(req, {
       $: { id: Math.random() }
     });
 
-    // Do something with response...
+    // Other code...
 
-    // Then return
-    return response;
+    // Then return the socket response
+    return res.response;
   }
 
   // Do other things...
 }
 ```
 
-## Topics
+## Cloudflare
+Example route:
+```ts
+import { route } from 'ws-routers/cloudflare';
+
+export default route<{ id: number }>({
+  message(event) {
+    // Access the current socket with `this`
+    // Obtain the data passed in with `this.$`
+    this.send(this.$.id + ':' + event.data);
+  }
+});
+```
+
+Use in a request handler:
+```ts
+import handleSocket from '/path/to/route';
+
+export default (req: Request): Response => {
+  if (req.headers.get("upgrade") === "websocket") {
+    // The websocket is handled by the route
+    const socketPair = handleSocket(req, { id: Math.random() });
+
+    // Other code...
+
+    // Then return the response with the client socket
+    return new Response(null, {
+      status: 101, webSocket: socketPair[0]
+    });
+  }
+
+  // Do other things...
+}
+```
+
+## Events
 A very simple event model.
 ```ts
 import event from 'ws-routers/event';

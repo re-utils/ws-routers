@@ -1,5 +1,5 @@
 /**
- * A simple pubsub topic module
+ * A simple pubsub single event module
  * @module
  */
 

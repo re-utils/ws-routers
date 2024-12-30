@@ -1,5 +1,6 @@
+/// <reference types="@cloudflare/workers-types" />
 /**
- * WebSocket router API for Deno
+ * WebSocket router API for Cloudflare Workers
  * @module
  */
 
@@ -24,11 +25,28 @@ export interface Handler<T> {
 }
 
 /**
+ * Describe a WebSocket pair
+ */
+export interface WebSockets<T> {
+  /**
+   * The client socket
+   */
+  // eslint-disable-next-line
+  0: WebSocket;
+
+  /**
+   * The server socket
+   */
+  // eslint-disable-next-line
+  1: ServerWebSocket<T>;
+}
+
+/**
  * The returned upgrade function
  */
 type UpgradeFunc<T> = undefined extends T
-  ? (req: Request, opts?: Deno.UpgradeWebSocketOptions & { $?: T }) => Deno.WebSocketUpgrade
-  : (req: Request, opts: Deno.UpgradeWebSocketOptions & { $: T }) => Deno.WebSocketUpgrade;
+  ? (opts?: T) => WebSockets<T>
+  : (opts: T) => WebSockets<T>;
 
 /**
  * Create a WebSocket route
@@ -39,13 +57,16 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
   const data = [handler.open ?? null, handler.message ?? null, handler.error ?? null, handler.close ?? null] as const;
 
   // @ts-expect-error Type is not assignable fr
-  return (req: Request, opts: Deno.UpgradeWebSocketOptions & { $: T }) => {
-    const res = Deno.upgradeWebSocket(req);
-    const s = res.socket as ServerWebSocket<T>;
+  return (opts: T) => {
+    const sockets = new WebSocketPair();
+
+    // Accept the connection
+    const s = sockets[1] as ServerWebSocket<T>;
+    s.accept();
 
     // Load the passed data
-    if (opts.$ != null)
-      s.$ = opts.$;
+    if (opts != null)
+      s.$ = opts;
 
     // Load event handlers
     s.onopen = data[0];
@@ -53,6 +74,6 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
     s.onerror = data[2];
     s.onclose = data[3];
 
-    return res;
+    return s;
   };
 };

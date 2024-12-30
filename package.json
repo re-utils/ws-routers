@@ -1,6 +1,6 @@
 {
   "name": "ws-routers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Runtime-specific high performance WebSocket routers",
   "keywords": [],
   "license": "MIT",
@@ -15,6 +15,7 @@
     "try-minify": "bun scripts/reportMinifySize.ts"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241224.0",
     "@stylistic/eslint-plugin": "latest",
     "@types/bun": "latest",
     "@types/deno": "^2.0.0",
@@ -30,7 +31,9 @@
   },
   "dependencies": {},
   "exports": {
+    "events": "./events.js",
     "bun": "./bun.js",
-    "event": "./event.js"
+    "event": "./event.js",
+    "cloudflare": "./cloudflare.js"
   }
 }
