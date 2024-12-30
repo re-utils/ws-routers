@@ -1,6 +1,6 @@
 {
   "name": "@re-utils/ws-routers",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "exports": {
     "./bun": "./src/bun.ts",
@@ -9,10 +9,6 @@
     "./event": "./src/event.ts"
   },
   "publish": {
-    "include": [
-      "README.md",
-      "package.json",
-      "src"
-    ]
+    "include": ["README.md", "package.json", "src"]
   }
 }

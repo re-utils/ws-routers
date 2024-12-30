@@ -42,17 +42,17 @@ Bun.build({
 });
 
 // @ts-expect-error package.json may not have this yet
-Object.assign(pkg.exports ??= {}, Object.fromEntries(npmEntries
+pkg.exports = Object.fromEntries(npmEntries
   // Get names only
   .map((name) => name.substring(0, name.lastIndexOf('.') >>> 0))
   // Package info will be moved to lib
-  .map((name) => [name, `./${name}.js`])));
+  .map((name) => [name, `./${name}.js`]));
 
 // @ts-expect-error package.json may not have this yet
-// eslint-disable-next-line
-Object.assign(jsrPkg.exports ??= {}, Object.fromEntries(allEntries
+
+jsrPkg.exports = Object.fromEntries(allEntries
   // Package info will be moved to lib
-  .map((name) => [`./${name.substring(0, name.lastIndexOf('.') >>> 0)}`, `./src/${name}`])));
+  .map((name) => [`./${name.substring(0, name.lastIndexOf('.') >>> 0)}`, `./src/${name}`]));
 
 // Add new exports field
 Bun.write(`${ROOTDIR}/package.json`, JSON.stringify(pkg, null, 2));
