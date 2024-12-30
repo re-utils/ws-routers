@@ -4,11 +4,14 @@
   "license": "MIT",
   "exports": {
     "./bun": "./src/bun.ts",
-    "./topic": "./src/topic.ts",
-    "./deno": "./src/deno.ts",
-    "./event": "./src/event.ts"
+    "./event": "./src/event.ts",
+    "./deno": "./src/deno.ts"
   },
   "publish": {
-    "include": ["README.md", "package.json", "src"]
+    "include": [
+      "README.md",
+      "package.json",
+      "src"
+    ]
   }
 }

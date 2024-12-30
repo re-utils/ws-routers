@@ -31,8 +31,6 @@
   "dependencies": {},
   "exports": {
     "bun": "./bun.js",
-    "pubsub": "./pubsub.js",
-    "topic": "./topic.js",
     "event": "./event.js"
   }
 }
