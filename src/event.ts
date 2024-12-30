@@ -8,7 +8,7 @@ type Shift<T extends unknown[]> = T extends [unknown, ...infer X] ? X : [];
 /**
  * Describe a topic
  */
-export type Topic<Args extends [any, ...any[]]> = [
+export type Event<Args extends [any, ...any[]]> = [
   /**
    * A set of subscribers of the current topic
    */
@@ -27,7 +27,7 @@ export type Topic<Args extends [any, ...any[]]> = [
  * @param f - The callback function to apply for every subscriber
  * @returns The initialized topic
  */
-export default <const Handler extends (x: any, ...args: any[]) => any>(f: Handler): Topic<Parameters<Handler>> => {
+export default <const Handler extends (x: any, ...args: any[]) => any>(f: Handler): Event<Parameters<Handler>> => {
   const subs = new Set();
   return [
     subs,

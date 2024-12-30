@@ -5,7 +5,8 @@
   "exports": {
     "./bun": "./src/bun.ts",
     "./topic": "./src/topic.ts",
-    "./deno": "./src/deno.ts"
+    "./deno": "./src/deno.ts",
+    "./event": "./src/event.ts"
   },
   "publish": {
     "include": [

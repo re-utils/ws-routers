@@ -1,10 +1,10 @@
 import { describe, test, expect } from 'bun:test';
-import topic from 'ws-routers/topic';
+import event from 'ws-routers/event';
 
 describe('Pubsub', () => {
-  test('Topic', () => {
+  test('Event', () => {
     const arr: number[] = [];
-    const [addSubs, publishAdd] = topic((x: number, y: number) => {
+    const [addSubs, publishAdd] = event((x: number, y: number) => {
       arr.push(x + y);
     });
 

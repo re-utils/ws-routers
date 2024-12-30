@@ -76,10 +76,10 @@ export default (req: Request): Response => {
 ## Topics
 A very simple event model.
 ```ts
-import topic from 'ws-routers/topic';
+import event from 'ws-routers/event';
 
 // Create a topic
-const [subscribers, publish] = topic((subscriber, ...args) => {
+const [subscribers, publish] = event((subscriber, ...args) => {
   // Do something with subscriber and args...
 });
 
