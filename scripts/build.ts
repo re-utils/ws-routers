@@ -4,7 +4,6 @@ import { resolve } from 'node:path/posix';
 
 import { transpileDeclaration } from 'typescript';
 import tsconfig from '../tsconfig.json';
-import pkg from '../package.json';
 import jsrPkg from '../jsr.json';
 
 // Constants
@@ -41,19 +40,10 @@ Bun.build({
   outdir: 'lib'
 });
 
-// @ts-expect-error package.json may not have this yet
-pkg.exports = Object.fromEntries(npmEntries
-  // Get names only
-  .map((name) => name.substring(0, name.lastIndexOf('.') >>> 0))
-  // Package info will be moved to lib
-  .map((name) => [name, `./${name}.js`]));
-
-// @ts-expect-error package.json may not have this yet
-
+// @ts-expect-error jsr.json may not have this yet
 jsrPkg.exports = Object.fromEntries(allEntries
   // Package info will be moved to lib
   .map((name) => [`./${name.substring(0, name.lastIndexOf('.') >>> 0)}`, `./src/${name}`]));
 
-// Add new exports field
-Bun.write(`${ROOTDIR}/package.json`, JSON.stringify(pkg, null, 2));
+// Add exports field
 Bun.write(`${ROOTDIR}/jsr.json`, JSON.stringify(jsrPkg, null, 2));

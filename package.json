@@ -1,11 +1,9 @@
 {
   "name": "ws-routers",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Runtime-specific high performance WebSocket routers",
-  "keywords": [],
   "license": "MIT",
   "type": "module",
-  "types": "./index.d.ts",
   "scripts": {
     "build:test": "bun scripts/build.ts && bun test",
     "build:bench": "bun build:test && bun scripts/bench.ts",
@@ -28,11 +26,5 @@
     "typescript": "latest",
     "typescript-eslint": "latest",
     "uglify-js": "^3.19.3"
-  },
-  "dependencies": {},
-  "exports": {
-    "bun": "./bun.js",
-    "event": "./event.js",
-    "cloudflare": "./cloudflare.js"
   }
 }
