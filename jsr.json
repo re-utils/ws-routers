@@ -1,6 +1,6 @@
 {
   "name": "@re-utils/ws-routers",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "exports": {
     "./bun": "./src/bun.ts",

@@ -103,7 +103,7 @@ export const socketHandler: WebSocketHandler<any> = {
     s[5] = handlers[5];
 
     // Run the open handler
-    data[0][5](s);
+    handlers[0](s);
   },
   message: (s: ServerSocket, a) => { s[1](s, a); },
   close: (s: ServerSocket, a, b) => { s[2](s, a, b); },
