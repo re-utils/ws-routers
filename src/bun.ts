@@ -7,6 +7,8 @@ import type { WebSocketHandler, Server, ServerWebSocket, Serve } from 'bun';
 export type { ServerWebSocket };
 
 type HandlerNames = 'message' | 'open' | 'close' | 'drain' | 'ping' | 'pong';
+type UnionToIntersection<U> =
+  (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never;
 
 /**
  * The returned upgrade function
@@ -31,8 +33,13 @@ export type WebSocketOptions = Omit<WebSocketHandler<unknown>, HandlerNames>;
 export type WebSocketServeOptions = Omit<
   // Extract all type that can specify websocket and replace
   // Their websocket type with an option type
-  Extract<Serve<unknown>, { websocket: any }>, 'websocket'
-> & { websocket?: WebSocketOptions };
+  UnionToIntersection<Partial<Extract<Serve<unknown>, { websocket: any }>>>, 'websocket'
+> & {
+  /**
+   * Bun WebSocket options
+   */
+  websocket?: WebSocketOptions
+};
 
 /** @internal */
 // eslint-disable-next-line
@@ -119,6 +126,7 @@ export const socketHandler: WebSocketHandler<any> = {
  * @returns The created server
  */
 export const serve = (options: WebSocketServeOptions, routes: UpgradeFunc<unknown>[]): Server => {
+  // @ts-expect-error TS you don't need to care about this
   const server = Bun.serve({
     ...options,
     websocket: 'websocket' in options
