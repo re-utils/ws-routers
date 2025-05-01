@@ -129,9 +129,8 @@ export const serve = (options: WebSocketServeOptions, routes: UpgradeFunc<unknow
   // @ts-expect-error TS you don't need to care about this
   const server = Bun.serve({
     ...options,
-    websocket: 'websocket' in options
-      ? { ...socketHandler, ...options.websocket }
-      : socketHandler
+    // Override handler when necessary
+    websocket: Object.assign(options.websocket ?? {}, socketHandler)
   });
   loadRoutes(routes, server);
   return server;
