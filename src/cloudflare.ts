@@ -74,6 +74,6 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
     s.onerror = data[2];
     s.onclose = data[3];
 
-    return s;
+    return sockets;
   };
 };

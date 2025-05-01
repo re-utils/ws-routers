@@ -63,7 +63,7 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
   let server: Server | undefined;
 
   return (req: Request, data: any) => server == null
-    ? (server = req as unknown as Server) as unknown as boolean
+    ? server = req as any
     : server.upgrade(req, { data: [handlers, data] });
 };
 
@@ -73,7 +73,7 @@ export const route = <T>(handler: Handler<T>): UpgradeFunc<T> => {
  * @param server - The target Bun server
  */
 export const loadRoutes = (routes: UpgradeFunc<unknown>[], server: Server): void => {
-  routes.forEach((f) => f(server as unknown as Request));
+  for (const f of routes) f(server as unknown as Request);
 };
 
 /** @internal */
